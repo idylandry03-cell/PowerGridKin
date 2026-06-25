@@ -11,17 +11,16 @@ from Views import (
     InterventionView,
     DatabaseView,
 )
-from Views.components import Components
+from Views.components import Components, AppColors
 
 
 class PowerGridApp:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.lang = "FR"
-
         self.page.title = "POWER-GRID-KIN"
-        self.page.theme_mode = ft.ThemeMode.LIGHT
+        self.page.theme_mode = ft.ThemeMode.DARK
         self.page.padding = 0
+        self.page.bgcolor = AppColors.BG
 
         db = DatabaseConnection(
             host="127.0.0.1",
@@ -44,115 +43,81 @@ class PowerGridApp:
 
     def show_login(self):
         self.page.clean()
-
-        view = LoginView(
+        login_view = LoginView(
             page=self.page,
             on_login_success=self.show_dashboard,
         )
-
-        self.page.add(Components.app_container(view.build()))
+        self.page.add(Components.app_container(login_view.build()))
         self.page.update()
+
+    def render_page(self, content):
+        self.page.clean()
+
+        layout = ft.Row(
+            controls=[
+                self.sidebar(),
+                ft.Container(
+                    content=ft.Column(
+                        controls=[content],
+                        scroll=ft.ScrollMode.AUTO,
+                    ),
+                    expand=True,
+                    padding=ft.Padding(30, 25, 30, 25),
+                    bgcolor=AppColors.BG,
+                ),
+            ],
+            expand=True,
+            spacing=0,
+        )
+
+        self.page.add(layout)
+        self.page.update()
+
+    def sidebar(self):
+        return ft.Container(
+            width=260,
+            bgcolor=AppColors.SIDEBAR,
+            padding=ft.Padding(18, 20, 18, 20),
+            content=ft.Column(
+                controls=[
+                    ft.Text("⚡ POWER-GRID-KIN", size=20, weight=ft.FontWeight.BOLD, color=AppColors.TEXT),
+                    ft.Divider(),
+
+                    Components.navigation_button("Dashboard", self.show_dashboard),
+                    Components.navigation_button("Incidents", self.show_incidents),
+                    Components.navigation_button("Alertes", self.show_alertes),
+                    Components.navigation_button("Interventions", self.show_interventions),
+                    Components.navigation_button("Base de données", self.show_database),
+
+                    ft.Container(expand=True),
+
+                    ft.Text("Système de supervision hardware", size=12, color=AppColors.MUTED),
+                    Components.danger_button("Déconnexion", lambda e: self.show_login()),
+                ],
+                spacing=12,
+                expand=True,
+            ),
+        )
 
     def show_dashboard(self, e=None):
-        self.page.clean()
-
-        view = DashboardView(
-            power_service=self.power_service,
-            statistique_service=self.statistique_service,
-        )
-
-        self.page.add(
-            Components.app_container(
-                ft.Column(
-                    controls=[
-                        self.build_navigation(),
-                        view.build(),
-                    ]
-                )
-            )
-        )
-        self.page.update()
+        view = DashboardView(self.power_service, self.statistique_service)
+        self.render_page(view.build())
 
     def show_incidents(self, e=None):
-        self.page.clean()
-
         view = IncidentView(self.power_service, self.page)
-
-        self.page.add(
-            Components.app_container(
-                ft.Column(
-                    controls=[
-                        self.build_navigation(),
-                        view.build(),
-                    ]
-                )
-            )
-        )
-        self.page.update()
+        self.render_page(view.build())
 
     def show_alertes(self, e=None):
-        self.page.clean()
-
         view = AlertView(self.power_service)
-
-        self.page.add(
-            Components.app_container(
-                ft.Column(
-                    controls=[
-                        self.build_navigation(),
-                        view.build(),
-                    ]
-                )
-            )
-        )
-        self.page.update()
+        self.render_page(view.build())
 
     def show_interventions(self, e=None):
-        self.page.clean()
-
         view = InterventionView(self.power_service, self.page)
-
-        self.page.add(
-            Components.app_container(
-                ft.Column(
-                    controls=[
-                        self.build_navigation(),
-                        view.build(),
-                    ]
-                )
-            )
-        )
-        self.page.update()
+        self.render_page(view.build())
 
     def show_database(self, e=None):
-        self.page.clean()
-
         view = DatabaseView(self.power_service)
-
-        self.page.add(
-            Components.app_container(
-                ft.Column(
-                    controls=[
-                        self.build_navigation(),
-                        view.build(),
-                    ]
-                )
-            )
-        )
-        self.page.update()
-
-    def build_navigation(self):
-        return ft.Row(
-            controls=[
-                Components.navigation_button("Dashboard", self.show_dashboard),
-                Components.navigation_button("Incidents", self.show_incidents),
-                Components.navigation_button("Alertes", self.show_alertes),
-                Components.navigation_button("Interventions", self.show_interventions),
-                Components.navigation_button("Base de données", self.show_database),
-                Components.navigation_button("Déconnexion", lambda e: self.show_login()),
-            ],
-            wrap=True,
-        )
+        self.render_page(view.build())
 
 
 def main(page: ft.Page):

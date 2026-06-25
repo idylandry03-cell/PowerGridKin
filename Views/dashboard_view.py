@@ -20,10 +20,10 @@ class DashboardView:
 
                 ft.Row(
                     controls=[
-                        Components.info_card("Incidents", stats["incidents_total"], AppColors.DANGER, "⚠"),
-                        Components.info_card("Ouverts", stats["incidents_ouverts"], AppColors.WARNING, "📂"),
-                        Components.info_card("Résolus", stats["incidents_resolus"], AppColors.SUCCESS, "✔"),
-                        Components.info_card("Alertes", stats["alertes_critiques"], AppColors.DANGER, "🚨"),
+                        Components.info_card("Incidents", stats["incidents_total"], AppColors.DANGER),
+                        Components.info_card("Ouverts", stats["incidents_ouverts"], AppColors.WARNING),
+                        Components.info_card("Résolus", stats["incidents_resolus"], AppColors.SUCCESS),
+                        Components.info_card("Alertes", stats["alertes_critiques"], AppColors.DANGER),
                     ],
                     wrap=True,
                 ),

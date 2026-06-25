@@ -2,48 +2,34 @@ import flet as ft
 
 
 class AppColors:
-    PRIMARY = "#0B5394"
-    SECONDARY = "#3D85C6"
-    BACKGROUND = "#F4F7FB"
-    CARD = "#FFFFFF"
-    BORDER = "#D9E2EF"
-    TEXT = "#1C1C1C"
-    MUTED = "#6B7280"
-    SUCCESS = "#2E7D32"
-    WARNING = "#F1B600"
-    DANGER = "#D00000"
-    INFO = "#1976D2"
+    BG = "#1B1C22"
+    SIDEBAR = "#20212A"
+    TOPBAR = "#2A2B35"
+    CARD = "#262733"
+    CARD_LIGHT = "#2E3040"
+    PRIMARY = "#7F8CFF"
+    BLUE = "#2196F3"
+    TEXT = "#F2F2F5"
+    MUTED = "#B8B8C7"
+    SUCCESS = "#4CAF50"
+    WARNING = "#FFC107"
+    DANGER = "#F44336"
+    BORDER = "#3A3B48"
 
 
 class AppText:
     FR = {
-        "dashboard": "Tableau de bord",
+        "dashboard": "Dashboard",
         "incidents": "Incidents",
         "alerts": "Alertes",
         "interventions": "Interventions",
         "database": "Base de données",
         "logout": "Déconnexion",
-        "language": "Langue",
-        "french": "Français",
-        "english": "Anglais",
-    }
-
-    EN = {
-        "dashboard": "Dashboard",
-        "incidents": "Incidents",
-        "alerts": "Alerts",
-        "interventions": "Interventions",
-        "database": "Database",
-        "logout": "Logout",
-        "language": "Language",
-        "french": "French",
-        "english": "English",
     }
 
     @staticmethod
     def get(lang, key):
-        data = AppText.FR if lang == "FR" else AppText.EN
-        return data.get(key, key)
+        return AppText.FR.get(key, key)
 
 
 def app_border():
@@ -59,29 +45,15 @@ class Components:
 
     @staticmethod
     def title(text):
-        return ft.Text(
-            text,
-            size=28,
-            weight=ft.FontWeight.BOLD,
-            color=AppColors.PRIMARY,
-        )
+        return ft.Text(text, size=30, weight=ft.FontWeight.BOLD, color=AppColors.TEXT)
 
     @staticmethod
     def subtitle(text):
-        return ft.Text(
-            text,
-            size=14,
-            color=AppColors.MUTED,
-        )
+        return ft.Text(text, size=14, color=AppColors.MUTED)
 
     @staticmethod
     def section_title(text):
-        return ft.Text(
-            text,
-            size=20,
-            weight=ft.FontWeight.BOLD,
-            color=AppColors.TEXT,
-        )
+        return ft.Text(text, size=20, weight=ft.FontWeight.BOLD, color=AppColors.TEXT)
 
     @staticmethod
     def page_header(title, subtitle=""):
@@ -90,7 +62,7 @@ class Components:
                 Components.title(title),
                 Components.subtitle(subtitle),
             ],
-            spacing=4,
+            spacing=5,
         )
 
     @staticmethod
@@ -98,34 +70,23 @@ class Components:
         return ft.ElevatedButton(
             text,
             on_click=on_click,
+            bgcolor=AppColors.CARD_LIGHT,
+            color=AppColors.TEXT,
+            width=210,
+            height=45,
         )
 
     @staticmethod
     def primary_button(text, on_click=None):
-        return ft.ElevatedButton(
-            text,
-            bgcolor=AppColors.PRIMARY,
-            color="white",
-            on_click=on_click,
-        )
+        return ft.ElevatedButton(text, on_click=on_click, bgcolor=AppColors.PRIMARY, color="white")
 
     @staticmethod
     def success_button(text, on_click=None):
-        return ft.ElevatedButton(
-            text,
-            bgcolor=AppColors.SUCCESS,
-            color="white",
-            on_click=on_click,
-        )
+        return ft.ElevatedButton(text, on_click=on_click, bgcolor=AppColors.SUCCESS, color="white")
 
     @staticmethod
     def danger_button(text, on_click=None):
-        return ft.ElevatedButton(
-            text,
-            bgcolor=AppColors.DANGER,
-            color="white",
-            on_click=on_click,
-        )
+        return ft.ElevatedButton(text, on_click=on_click, bgcolor=AppColors.DANGER, color="white")
 
     @staticmethod
     def info_card(title, value, color=AppColors.PRIMARY, icon=""):
@@ -133,44 +94,29 @@ class Components:
             content=ft.Container(
                 content=ft.Column(
                     controls=[
-                        ft.Text(icon, size=22),
+                        ft.Text(icon, size=26),
                         ft.Text(title, size=14, color=AppColors.MUTED),
-                        ft.Text(
-                            str(value),
-                            size=26,
-                            weight=ft.FontWeight.BOLD,
-                            color=color,
-                        ),
+                        ft.Text(str(value), size=28, weight=ft.FontWeight.BOLD, color=color),
                     ],
-                    spacing=6,
+                    spacing=8,
                 ),
-                padding=ft.Padding(18, 16, 18, 16),
+                width=260,
+                height=145,
+                padding=18,
                 bgcolor=AppColors.CARD,
-                border_radius=12,
+                border_radius=14,
                 border=app_border(),
-                width=230,
             )
         )
 
     @staticmethod
     def data_card(title, lines, badges=None):
         controls = [
-            ft.Text(
-                title,
-                size=16,
-                weight=ft.FontWeight.BOLD,
-                color=AppColors.TEXT,
-            )
+            ft.Text(title, size=16, weight=ft.FontWeight.BOLD, color=AppColors.TEXT)
         ]
 
         for line in lines:
-            controls.append(
-                ft.Text(
-                    str(line),
-                    size=13,
-                    color=AppColors.TEXT,
-                )
-            )
+            controls.append(ft.Text(str(line), size=13, color=AppColors.MUTED))
 
         if badges:
             controls.append(
@@ -183,25 +129,20 @@ class Components:
 
         return ft.Card(
             content=ft.Container(
-                content=ft.Column(
-                    controls=controls,
-                    spacing=7,
-                ),
-                padding=ft.Padding(16, 14, 16, 14),
+                content=ft.Column(controls=controls, spacing=7),
+                padding=16,
                 bgcolor=AppColors.CARD,
-                border_radius=12,
+                border_radius=14,
                 border=app_border(),
-                width=280,
             )
         )
 
     @staticmethod
     def status_badge(text):
         value = str(text or "").lower()
+        color = AppColors.BLUE
 
-        color = AppColors.INFO
-
-        if value in ["critical", "failed", "critique"]:
+        if value in ["critical", "failed"]:
             color = AppColors.DANGER
         elif value in ["high", "warning", "medium", "ongoing", "in_progress", "scheduled"]:
             color = AppColors.WARNING
@@ -209,12 +150,7 @@ class Components:
             color = AppColors.SUCCESS
 
         return ft.Container(
-            content=ft.Text(
-                str(text),
-                size=12,
-                color="white",
-                weight=ft.FontWeight.BOLD,
-            ),
+            content=ft.Text(str(text), size=12, color="white", weight=ft.FontWeight.BOLD),
             bgcolor=color,
             padding=ft.Padding(10, 5, 10, 5),
             border_radius=20,
@@ -225,14 +161,9 @@ class Components:
         return ft.Container(
             content=content,
             expand=True,
-            padding=ft.Padding(20, 20, 20, 20),
-            bgcolor=AppColors.BACKGROUND,
+            bgcolor=AppColors.BG,
         )
 
     @staticmethod
     def empty_message(text):
-        return ft.Text(
-            text,
-            size=14,
-            color=AppColors.MUTED,
-        )
+        return ft.Text(text, size=14, color=AppColors.MUTED)
